@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<style type="text/css">
+		*{
+			border:0;
+			margin:0;
+			padding:0;
+		}
+		#wrapper{
+			margin: 0 auto;
+			width: 100%;
+		}
+	</style>
+	<script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		// this way not catch errors
+		/*$.ajax({url: "https://google.com/", success: function(result){
+			$("#wrapper").html(result);
+		}});*/
+
+		// this way catch errors
+		// with this we can send params and make POST request
+		$.ajax({
+			url: "https://google.com/separating",
+			success: function(result){
+				$("#wrapper").html(result);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+		    	var myAppName = 'webview';
+				var myActionType = 'error';
+				var myActionParameters = {error: 12982389, errorMessage: "WTF"}; // put extra info into a dict if you need it
+
+				// (separating the actionType from parameters makes it easier to parse in ObjC.)
+				var jsonString = (JSON.stringify(myActionParameters));
+				var escapedJsonParameters = escape(jsonString);
+				var url = myAppName + '://' + myActionType + "#" + escapedJsonParameters;
+				document.location.href = url;
+
+				$("#message").text(textStatus + errorThrown);
+			}
+		});
+	</script>
+
+</head>
+<body>
+
+	<h1 id="message">iOS web view</h1>
+	<div id="wrapper">
+		
+	</div>
+
+</body>
+</html>
